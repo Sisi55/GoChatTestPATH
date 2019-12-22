@@ -31,7 +31,7 @@ func init() {
 	// 렌더러 생성
 	renderer = render.New()
 
-	s, err := mgo.Dial("")
+	s, err := mgo.Dial("mongodb://203.252.223.254/32")
 	if err != nil {
 		panic(err)
 	}
@@ -51,12 +51,12 @@ func main() {
 		renderer.HTML(w, http.StatusOK, "index", map[string]interface{}{"title": "simple chat!"})
 	})
 
-	//router.GET("/rooms", retrieveRooms)
-	//router.GET("/rooms/:id", retrieveRoom)
-	//router.POST("/rooms", createRoom)
-	//router.DELETE("/rooms/:id", deleteRoom)
+	router.GET("/rooms", retrieveRooms)
+	router.GET("/rooms/:id", retrieveRoom)
+	router.POST("/rooms", createRoom)
+	router.DELETE("/rooms/:id", deleteRoom)
 	//
-	//router.GET("/rooms/:id/message", retrieveMessages)
+	router.GET("/rooms/:id/message", retrieveMessages)
 	////router.POST("/rooms/:id/messages", createMessage)
 	//
 	//router.GET("/info", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params){
@@ -65,11 +65,11 @@ func main() {
 	//	renderer.JSON(w, http.StatusOK, info)
 	//})
 	//
-	router.GET("/login", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params){
+	router.GET("/login", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		// login 페이지 렌더링
 		renderer.HTML(w, http.StatusOK, "login", nil)
 	})
-	router.GET("/logout", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params){
+	router.GET("/logout", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		// 세션에서 사용자 정보 제거 후 로그인 페이지로 이동
 		sessions.GetSession(r).Delete(currentUserKey)
 		http.Redirect(w, r, "/login", http.StatusFound)
